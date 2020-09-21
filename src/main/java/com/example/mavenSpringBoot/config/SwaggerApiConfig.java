@@ -40,7 +40,8 @@ public class SwaggerApiConfig {
 	@SuppressWarnings("unchecked")
 	private Predicate<String> paths() { 
 	    return Predicates.and(
-	    PathSelectors.regex("/api/v1/movies.*"));
+	    		PathSelectors.regex("/api/v1/movies.*")
+	    );
     } 
 
 }
