@@ -1,39 +1,46 @@
 package com.example.mavenSpringBoot.config;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerApiConfig extends WebMvcConfigurerAdapter {
+public class SwaggerApiConfig {
 	
-    @Bean
-    public Docket api() {
-        // @formatter:off
-        //Register the controllers to swagger
-        //Also it is configuring the Swagger Docket
-        return new Docket(DocumentationType.SWAGGER_2).select()
-                // .apis(RequestHandlerSelectors.any())
-                .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
-                // .paths(PathSelectors.any())
-                // .paths(PathSelectors.ant("/swagger2-demo"))
-                .build();
-        // @formatter:on
-    }
- 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) 
-    {
-        //enabling swagger-ui part for visual documentation
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
+	@Bean
+    public Docket produceApi(){
+		return new Docket(DocumentationType.SWAGGER_2)
+				.apiInfo(apiInfo())
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("com.example.mavenSpringBoot.rest"))
+				.paths(paths())
+				.build();
+	}
+
+	private ApiInfo apiInfo() {
+	    return new ApiInfoBuilder()
+	    		.title("Movie Service")
+	    		.description("Movie service using spring boot microservice")
+	    		.version("1.0")
+	    		.contact(new Contact("Dushmanta Tanty", "http://127.0.0.1:8000/api/v1/movies/", "dusmanta.tanty@gmail.com"))
+	    		.build();
+	}
+
+	@SuppressWarnings("unchecked")
+	private Predicate<String> paths() { 
+	    return Predicates.and(
+	    PathSelectors.regex("/api/v1/movies.*"));
+    } 
+
 }

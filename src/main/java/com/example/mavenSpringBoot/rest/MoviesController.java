@@ -14,7 +14,7 @@ import com.example.mavenSpringBoot.services.MovieService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/movies")
+@RequestMapping("/api/v1/movies")
 public class MoviesController <T> {
 
 	@SuppressWarnings("rawtypes")
